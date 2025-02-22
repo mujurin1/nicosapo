@@ -44,7 +44,8 @@ export default class AutoEnterList extends React.Component {
           itemParam.openDate = response[id]["openDate"];
           switch (this.props.type) {
             case `community`:
-              itemParam.url = `https://com.nicovideo.jp/community/${id}`;
+              // itemParam.url = `https://com.nicovideo.jp/community/${id}`;
+              itemParam.url = `https://nicovideo.jp/user/${id}`;
               break;
             case `program`:
               itemParam.url = `https://live.nicovideo.jp/gate/${id}`;

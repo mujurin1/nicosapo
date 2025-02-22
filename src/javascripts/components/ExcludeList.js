@@ -25,7 +25,8 @@ export default class ExcludeList extends React.Component {
         communities.forEach(community => {
           const itemParam = [];
           itemParam.id = community.id;
-          itemParam.url = `https://com.nicovideo.jp/community/${community.id}`;
+          // itemParam.url = `https://com.nicovideo.jp/community/${community.id}`;
+          itemParam.url = `https://nicovideo.jp/user/${community.id}`;
           itemParam.onClick = this.onClick;
           itemParam.thumbnail = community.thumbnail;
           itemParam.title = community.name || community.id;

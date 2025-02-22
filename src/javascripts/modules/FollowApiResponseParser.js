@@ -11,7 +11,8 @@ export default class FollowApiResponseParser {
     videoInfo.video().set("isReserved", program.liveCycle === "RELEASED");
 
     videoInfo.community().set("id", program.socialGroup.id);
-    videoInfo.community().set("thumbnail", program.socialGroup.thumbnailUrl);
+    // videoInfo.community().set("thumbnail", program.socialGroup.thumbnailUrl);
+    videoInfo.community().set("thumbnail", program.programProvider.icon);
 
     return videoInfo.xml();
   }
