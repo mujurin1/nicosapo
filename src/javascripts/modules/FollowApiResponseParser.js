@@ -12,7 +12,11 @@ export default class FollowApiResponseParser {
 
     videoInfo.community().set("id", program.socialGroup.id);
     // videoInfo.community().set("thumbnail", program.socialGroup.thumbnailUrl);
-    videoInfo.community().set("thumbnail", program.programProvider.icon);
+    // videoInfo.community().set("thumbnail", program.programProvider.icon);
+    if (program.providerType === "community")
+      videoInfo.community().set("thumbnail", program.programProvider.icon);
+    if (program.providerType === "channel")
+      videoInfo.community().set("thumbnail", program.socialGroup.thumbnailUrl);
 
     return videoInfo.xml();
   }
