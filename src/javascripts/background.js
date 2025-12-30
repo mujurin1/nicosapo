@@ -1,19 +1,19 @@
-import store from "store";
 import { interval } from 'rxjs';
-import "./modules/Pipe";
-import "./modules/Deamon";
-import Db from "./modules/db";
-import Badge from "./modules/Badge";
-import NiconamaTabs from "./modules/NiconamaTabs";
-import BackgroundReloader from "./modules/BackgroundReloader";
+import store from "store";
 import "./chrome/runtime.onMessage";
-import { CommunityBuilder, ProgramBuilder } from "./modules/ManageableBuilder";
+import BackgroundReloader from "./modules/BackgroundReloader";
+import Badge from "./modules/Badge";
 import bucket from "./modules/Bucket";
+import "./modules/Deamon";
+import { CommunityBuilder, ProgramBuilder } from "./modules/ManageableBuilder";
+import NiconamaTabs from "./modules/NiconamaTabs";
+import "./modules/Pipe";
+import Db from "./modules/db";
 
 Object.filter = (obj, predicate) =>
   Object.keys(obj)
-    .filter( key => predicate(key, obj[key]) )
-    .reduce( (res, key) => (res[key] = obj[key], res), {} );
+    .filter(key => predicate(key, obj[key]))
+    .reduce((res, key) => (res[key] = obj[key], res), {});
 
 // v4.6.2 -> v4.7.0
 const isMigrated = store.get("search.query.isMigrated", false);
@@ -95,9 +95,9 @@ chrome.contextMenus.removeAll(() => {
   chrome.contextMenus.create({
     type: "checkbox",
     title: "自動入場を手動で無効にする",
-    contexts: ["browser_action"],
+    contexts: ["action"],
     checked: store.get("options.autoEnter.forceCancel"),
-    onclick: function() {
+    onclick: function () {
       const currentValue = store.get("options.autoEnter.forceCancel");
       store.set("options.autoEnter.forceCancel", !currentValue);
     }
@@ -108,7 +108,7 @@ Badge.setBackgroundColor("#ff6200");
 Db.setAll("autoEnterCommunityList", "state", "init");
 
 interval(1000 * 60).subscribe(
-  _ => { BackgroundReloader.run() }
+  _ => { BackgroundReloader.run(); }
 );
 
 // Make Observable Interval start immediately without a delay.

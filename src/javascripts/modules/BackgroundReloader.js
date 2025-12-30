@@ -1,9 +1,7 @@
 import Api from "../api/Api";
-import Common from "../common/Common";
 import Badge from "../modules/Badge";
 import bucket from "./Bucket";
 import { CommunityBuilder, ProgramBuilder } from './ManageableBuilder';
-import {Poster} from "./Poster";
 import VideoInfoUtil from './VideoInfoUtil';
 
 export default class BackgroundReloader {
@@ -41,6 +39,10 @@ export default class BackgroundReloader {
         });
 
         bucket.mask(builders.map(v => v.co));
+      })
+      .catch(err => {
+        console.error(err);
+        throw err;
       });
   }
 }

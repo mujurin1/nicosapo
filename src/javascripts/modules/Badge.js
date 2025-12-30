@@ -10,15 +10,16 @@ export default class Badge {
     } else {
       text = value === "" ? 0 : value;
     }
-    chrome.browserAction.setBadgeText({ text: String(text) });
+    // chrome.browserAction.setBadgeText({ text: String(text) });
+    chrome.action.setBadgeText({ text: String(text) });
   }
 
   static setBackgroundColor(colorCode) {
-    chrome.browserAction.setBadgeBackgroundColor({ color: colorCode });
+    chrome.action.setBadgeBackgroundColor({ color: colorCode });
   }
 
   static refresh() {
-    chrome.browserAction.getBadgeText({}, text => {
+    chrome.action.getBadgeText({}, text => {
       Badge.setText(text);
     });
   }

@@ -1,8 +1,5 @@
-import axios from "axios";
 import { parseString } from "xml2js";
 import FollowApiResponseParser from "../modules/FollowApiResponseParser";
-
-const parameter_nicovideojs = [];
 
 export default class Api {
   static isLogined() {
@@ -53,13 +50,18 @@ export default class Api {
     return new Promise((resolve, reject) => {
       const url = "https://live.nicovideo.jp/front/api/pages/follow/v1/programs?status=onair&offset=0";
 
-      axios
-        .get(url)
+      fetch(url)
         .then(response => {
-          resolve(response.data.data.programs.map(FollowApiResponseParser.parse));
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          resolve(data.data.programs.map(FollowApiResponseParser.parse));
         })
         .catch(error => {
-          throw error;
+          reject(error);
         });
     });
   }
@@ -70,13 +72,18 @@ export default class Api {
     return new Promise((resolve, reject) => {
       const url = "https://live.nicovideo.jp/front/api/pages/follow/v1/programs?status=comingsoon&offset=0";
 
-      axios
-        .get(url)
+      fetch(url)
         .then(response => {
-          resolve(response.data.data.programs.map(FollowApiResponseParser.parse));
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          resolve(data.data.programs.map(FollowApiResponseParser.parse));
         })
         .catch(error => {
-          throw error;
+          reject(error);
         });
     });
   }
@@ -85,9 +92,9 @@ export default class Api {
   static getFutureOnair() {
     return new Promise(resolve => {
       const url = "https://live.nicovideo.jp/ranking?type=comingsoon";
-      axios.get(url).then(response => {
+      fetch(url).then(response => response.text()).then(data => {
         const parser = new DOMParser();
-        const html = parser.parseFromString(response.data, "text/html");
+        const html = parser.parseFromString(data, "text/html");
         const futureStreams = html.querySelectorAll('[class^="___rk-ranking-area-ranking___"]:nth-child(1) [class^="___rk-program-card___"]');
         if (futureStreams) {
           resolve(futureStreams);
@@ -99,9 +106,9 @@ export default class Api {
   static getOfficialOnair() {
     return new Promise(resolve => {
       const url = "https://live.nicovideo.jp/ranking?type=onair";
-      axios.get(url).then(response => {
+      fetch(url).then(response => response.text()).then(data => {
         const parser = new DOMParser();
-        const html = parser.parseFromString(response.data, "text/html");
+        const html = parser.parseFromString(data, "text/html");
         const officialStreams = html.querySelectorAll('[class^="___rk-ranking-area-ranking___"]:nth-child(1) [class^="___rk-program-card___"]');
         resolve(officialStreams);
       });
@@ -110,39 +117,51 @@ export default class Api {
 
   static getProgramStatus(programId) {
     return new Promise(resolve => {
-      axios
-        .get(`https://live2.nicovideo.jp/unama/watch/${programId}/programinfo`)
-        .then(response => {
-          if (response.data.meta.status === 200) {
+      fetch(`https://live2.nicovideo.jp/unama/watch/${programId}/programinfo`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.meta.status === 200) {
             resolve({
               programId: programId,
-              title: response.data.data.title,
-              status: response.data.data.status,
-              beginAt: response.data.data.beginAt,
-              endAt: response.data.data.endAt
+              title: data.data.title,
+              status: data.data.status,
+              beginAt: data.data.beginAt,
+              endAt: data.data.endAt
             });
           }
           resolve({
             programId: programId,
             title: null,
             status: "error",
-            beginAt: -1, 
+            beginAt: -1,
             endAt: -1
           });
         })
+        .catch(() => {
+          resolve({
+            programId: programId,
+            title: null,
+            status: "error",
+            beginAt: -1,
+            endAt: -1
+          });
+        });
     });
   }
 
   static getLatestProgram(communityId) {
     return new Promise(resolve => {
-      axios
-        .get(`https://live2.nicovideo.jp/unama/tool/v1/broadcasters/social_group/${communityId}/program`)
-        .then(response => {
-          if (response.data.meta.status === 200) {
-            resolve({ programId: response.data.data.nicoliveProgramId });
+      fetch(`https://live2.nicovideo.jp/unama/tool/v1/broadcasters/social_group/${communityId}/program`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.meta.status === 200) {
+            resolve({ programId: data.data.nicoliveProgramId });
           }
           resolve({ programId: null });
         })
+        .catch(() => {
+          resolve({ programId: null });
+        });
     });
   }
 
@@ -157,8 +176,8 @@ export default class Api {
         "commentCounter-asc": "commentCountAsc"
       };
       const q = `https://sp.live.nicovideo.jp/api/search?q=${query}&sortOrder=${sortModes[sortMode]}&isTagSearch=false&disableGrouping=false&hideMemberOnly=false&timeshiftIsAvailable=false&status=onair&offset=0&limit=100`;
-      axios.get(q).then(response => {
-        resolve(response.data);
+      fetch(q).then(response => response.json()).then(data => {
+        resolve(data);
       });
     });
   }
@@ -174,24 +193,24 @@ export default class Api {
     const parser = httpResponse => {
       const cursor = httpResponse.data.summary.cursor;
       const items = httpResponse.data.items.map(item => ({
-          title: item.nickname,
-          thumbnail: item.icons.large,
-          id: item.id,
-          url: `https://nicovideo.jp/user/${item.id}`
-        }));
-      return { 
+        title: item.nickname,
+        thumbnail: item.icons.large,
+        id: item.id,
+        url: `https://nicovideo.jp/user/${item.id}`
+      }));
+      return {
         cursor: cursor,
         items: items
-      }
+      };
     };
     return new Promise(resolve => {
       const endpoint = `https://nvapi.nicovideo.jp/v1/users/me/following/users?pageSize=100`;
       let query = ``;
       if (cursor != null) {
-        query = `&cursor=${cursor}`
+        query = `&cursor=${cursor}`;
       }
-      axios.get(endpoint + query, { headers: { "x-frontend-id": 3 } } ).then(response => {
-        const parsedResponse = parser(response.data);
+      fetch(endpoint + query, { headers: { "x-frontend-id": "3" } }).then(response => response.json()).then(data => {
+        const parsedResponse = parser(data);
         resolve(parsedResponse);
       });
     });
@@ -205,10 +224,9 @@ export default class Api {
     else if (source === "apiv2")
       url = `https://api.search.nicovideo.jp/api/v2/live/contents/search?q=${title}&targets=title&fields=contentId,title,viewCounter,commentCounter&filters[liveStatus][0]=onair&_sort=-viewCounter`;
 
-    const request = axios.get(url);
-    return request
+    return fetch(url)
       .then(response => {
-        if (response.status !== 200)
+        if (!response.ok)
           throw new Error("failed.");
         else
           return response;
@@ -222,22 +240,23 @@ export default class Api {
     const separator = ",";
     const joinedWith = distributorIdList.join(separator);
     const url = `https://api.ce.nicovideo.jp/api/v1/community.array?id=${joinedWith}`;
-    return axios
-      .get(url)
+    return fetch(url)
       .then(response => {
-        if (response.status != 200) {
+        if (!response.ok) {
           throw new Error("request failed.");
-        } else {
-          let ret;
-          parseString(response.data, (err, result) => {
-            if (result.nicovideo_community_response.error != null) {
-              ret = []
-            } else {
-              ret = result.nicovideo_community_response.community;
-            }
-          });
-          return ret;
         }
+        return response.text();
+      })
+      .then(data => {
+        let ret;
+        parseString(data, (err, result) => {
+          if (result.nicovideo_community_response.error != null) {
+            ret = [];
+          } else {
+            ret = result.nicovideo_community_response.community;
+          }
+        });
+        return ret;
       })
       .catch(error => {
         throw error;
