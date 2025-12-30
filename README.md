@@ -1,3 +1,20 @@
+# フォーク追記
+
+これは https://github.com/yurafuca/nicosapo のフォークです\
+古くなった API の改修のみを行っています
+
+対応内容
+- Manifest v3 への対応（マニフェストの更新と軽い修正のみ. 案外簡単）
+- 2025/12/31 時点までのニコニコ API 更新対応（公式、未来の公式タブは未対応）
+- scss バンドラーの削除（私の環境で動作しないため. 生成されない css ファイルを最初から dist/ に含めています）
+
+メモ
+- [42391ba](https://github.com/mujurin1/nicosapo/commit/42391ba9326cb00a643393d685752af05b06663e) 何故か従来のコードでは `null` が変えるため `localstorage` を直接参照
+- データの保存にはローカルストレージを使用（これは従来から）
+  - store ライブラリがローカルストレージをラップしたライブラリらしい
+- 古いコードは `// old:` を付けてコードベースに残す
+
+
 # nicosapo
 
 Google Chrome Extension build with React for extending NicoNico Live.
