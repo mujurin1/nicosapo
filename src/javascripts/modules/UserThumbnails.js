@@ -41,7 +41,6 @@ export default class UserThumbnails {
 
       // old: thumbParam.isReserved = UserThumbnails.isReserved(program);
       thumbParam.isReserved = program.liveCycle === "RELEASED";
-      thumbParam.isReserved = false;
       thumbParam.isOfficial = false;
       thumbParam.openTime = thumbParam.isReserved ? moment.unix(unixTime).calendar() : undefined;
 
