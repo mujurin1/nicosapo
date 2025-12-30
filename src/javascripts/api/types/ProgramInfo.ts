@@ -40,7 +40,12 @@ export interface ProgramInfo {
    * 放送提供者の種類 (community 以外は推測値)
    */
   providerType: "community" | "channel" | "user";
-  liveCycle: "ON_AIR" | "ENDED",
+  /**
+   * - `ON_AIR`: 放送中
+   * - `RELEASED`: 放送予定
+   * - `ENDED`: 放送終了
+   */
+  liveCycle: "ON_AIR" | "RELEASED" | "ENDED",
 
   /**
    * 放送開始時刻 (ミリ秒)\
@@ -76,6 +81,11 @@ export interface ProgramInfo {
     watchCount: number;
     /** コメント数 */
     commentCount: number;
+    /**
+     * タイムシフト予約数\
+     * ※ 0件の場合は存在しない?
+     */
+    reservationCount?: number;
   };
 
   timeshift: {

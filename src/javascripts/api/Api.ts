@@ -1,7 +1,6 @@
 ///@ts-nocheck
 
 import { parseString } from "xml2js";
-import FollowApiResponseParser from "../modules/FollowApiResponseParser";
 import { ProgramInfo, ProgramInfoResponse } from "./types/ProgramInfo";
 import { Statistics, StatisticsResponse } from "./types/Statistics";
 
@@ -20,12 +19,12 @@ export default class Api {
 
   static loadCasts<
     T extends "user" | "reserve" | "official" | "future"
-  >(liveType: T): T extends "user" ? Promise<ProgramInfo[]> : Promise<any[]> {
+  >(liveType: T): T extends "user" | "reserve" ? Promise<ProgramInfo[]> : Promise<any[]> {
     switch (liveType) {
       case "user":
-        return Api.getUserOnair();
+        return Api.getUser("onair");
       case "reserve":
-        return Api.getUserFuture() as any;
+        return Api.getUser("comingsoon");
       case "official":
         return Api.getOfficialOnair() as any;
       case "future":
@@ -36,10 +35,15 @@ export default class Api {
   // jQuery オブジェクトでなく JSON を返したい
   // → JSON で返すようになりました
 
-  static async getUserOnair(): Promise<ProgramInfo[]> {
+  static async getUser(
+    status: "onair" | "released" | "ended",
+    options?: { offset?: number; }
+  ): Promise<ProgramInfo[]> {
     // const url = "https://live.nicovideo.jp/front/api/pages/follow/v1/programs?status=onair&offset=0";
-    const url = "https://live.nicovideo.jp/front/api/pages/follow/v1/programs?status=onair&offset=0";
 
+    const url = new URL(`https://live.nicovideo.jp/front/api/pages/follow/v1/programs`);
+    url.searchParams.append("status", status);
+    if (options?.offset != null) url.searchParams.append("offset", options.offset.toString());
 
     const response = await fetch(url);
     if (!response.ok) {
@@ -50,26 +54,27 @@ export default class Api {
   }
 
 
-  // jQuery オブジェクトでなく JSON を返したい
-  static getUserFuture() {
-    return new Promise((resolve, reject) => {
-      const url = "https://live.nicovideo.jp/front/api/pages/follow/v1/programs?status=comingsoon&offset=0";
+  // getUser("comingsoon") に置き換え済み
+  // // jQuery オブジェクトでなく JSON を返したい
+  // static getUserFuture() {
+  //   return new Promise((resolve, reject) => {
+  //     const url = "https://live.nicovideo.jp/front/api/pages/follow/v1/programs?status=comingsoon&offset=0";
 
-      fetch(url)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          resolve(data.data.programs.map(FollowApiResponseParser.parse));
-        })
-        .catch(error => {
-          reject(error);
-        });
-    });
-  }
+  //     fetch(url)
+  //       .then(response => {
+  //         if (!response.ok) {
+  //           throw new Error(`HTTP error! status: ${response.status}`);
+  //         }
+  //         return response.json();
+  //       })
+  //       .then(data => {
+  //         resolve(data.data.programs.map(FollowApiResponseParser.parse));
+  //       })
+  //       .catch(error => {
+  //         reject(error);
+  //       });
+  //   });
+  // }
 
 
   static getFutureOnair() {
