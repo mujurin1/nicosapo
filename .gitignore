@@ -5,6 +5,12 @@ dist/
 *.log
 
 
+# 生成されない css ファイルを含める. これは eb879f42d1ed0658376e8bcea5cdf975b2cc8306 の影響
+!dist/assets/stylesheets/content.css
+!dist/assets/stylesheets/popup.css
+!dist/assets/stylesheets/options.css
+
+
 # Created by https://www.gitignore.io/api/macos,windows,webstorm,visualstudiocode
 
 ### macOS ###
