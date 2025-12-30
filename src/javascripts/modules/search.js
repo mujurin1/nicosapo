@@ -238,9 +238,10 @@ export default class Search {
 
     resultParent.appendChild(resultChild);
 
-    if (!isCannotBeExcluded) {
-      resultParent.appendChild(excludeButton);
-    }
+    // MEMO: 全ての放送をミュート可能にする. 以前は: 公式番組やコミュ限番組はミュート不可
+    // if (!isCannotBeExcluded) {
+    resultParent.appendChild(excludeButton);
+    // }
 
     const imgParent = document.createElement("a");
     imgParent.href = url;
