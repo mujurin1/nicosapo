@@ -239,7 +239,7 @@ export default class Search {
     resultParent.appendChild(resultChild);
 
     // MEMO: 全ての放送をミュート可能にする. 以前は: 公式番組やコミュ限番組はミュート不可
-    // if (!isCannotBeExcluded) {
+    // old: if (!isCannotBeExcluded) {
     resultParent.appendChild(excludeButton);
     // }
 

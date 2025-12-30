@@ -19,19 +19,17 @@ export default class UserThumbnails {
 
     programs.forEach(program => {
       const thumbParam = {};
-      // const thumbnailUrl = program.querySelector("community thumbnail").textContent;
+      // old: const thumbnailUrl = program.querySelector("community thumbnail").textContent;
       const thumbnailUrl = program.programProvider?.iconSmall;
       thumbParam.background = `url('${thumbnailUrl}')`;
-      // thumbParam.title = program.querySelector("video title").textContent;
+      // old: thumbParam.title = program.querySelector("video title").textContent;
       thumbParam.title = program.title;
-      // thumbParam.id = program.querySelector("video id").textContent;
+      // old: thumbParam.id = program.querySelector("video id").textContent;
       thumbParam.id = program.id;
       thumbParam.url = `https://live.nicovideo.jp/watch/${thumbParam.id}`;
       thumbParam.text = thumbParam.title;
 
-      // const unixTime = program.querySelector("video open_time_jpstr").textContent;
-      // program.elapsed_time: 経過時間
-      // unixTime 経過時間と現在時刻を元に放送開始時刻を計算する
+      // old: const unixTime = program.querySelector("video open_time_jpstr").textContent;
       const unixTime = Math.floor(program.beginAt / 1000);
 
       moment.locale('jp');
@@ -41,12 +39,14 @@ export default class UserThumbnails {
 
       thumbParam.openDate = date;
 
-      // thumbParam.isReserved = UserThumbnails.isReserved(program);
+      // old: thumbParam.isReserved = UserThumbnails.isReserved(program);
+      thumbParam.isReserved = program.liveCycle === "RELEASED";
       thumbParam.isReserved = false;
       thumbParam.isOfficial = false;
       thumbParam.openTime = thumbParam.isReserved ? moment.unix(unixTime).calendar() : undefined;
 
       const today = new Date();
+      console.log(`>>> title: ${thumbParam.title}, ${date.getDate() - today.getDate()}`);
       switch (date.getDate() - today.getDate()) {
         case 0:
           thumbParam.day = `今日`;

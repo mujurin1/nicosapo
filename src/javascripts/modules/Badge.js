@@ -10,7 +10,7 @@ export default class Badge {
     } else {
       text = value === "" ? 0 : value;
     }
-    // chrome.browserAction.setBadgeText({ text: String(text) });
+    // old: chrome.browserAction.setBadgeText({ text: String(text) });
     chrome.action.setBadgeText({ text: String(text) });
   }
 

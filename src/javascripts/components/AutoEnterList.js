@@ -1,7 +1,7 @@
 import React from "react";
 import Time from "../common/Time";
-import BroadcastItem from "./BroadcastItem";
 import AutoEnterEmpty from "../components/AutoEnterEmpty";
+import BroadcastItem from "./BroadcastItem";
 
 export default class AutoEnterList extends React.Component {
   constructor(props) {
@@ -44,7 +44,7 @@ export default class AutoEnterList extends React.Component {
           itemParam.openDate = response[id]["openDate"];
           switch (this.props.type) {
             case `community`:
-              // itemParam.url = `https://com.nicovideo.jp/community/${id}`;
+              // old: itemParam.url = `https://com.nicovideo.jp/community/${id}`;
               itemParam.url = `https://nicovideo.jp/user/${id}`;
               break;
             case `program`:

@@ -8,11 +8,11 @@ export default class BackgroundReloader {
     Promise.resolve()
       .then(() => Api.loadCasts("user"))
       .then($videoInfoList => {
-        // $videoInfoList = VideoInfoUtil.removeReservation($videoInfoList);
+        // old: $videoInfoList = VideoInfoUtil.removeReservation($videoInfoList);
         Badge.setText($videoInfoList.length);
         const builders = [];
         $videoInfoList.forEach(videoInfo => {
-          // const communityId = videoInfo.querySelector("community id").textContent;
+          // old: const communityId = videoInfo.querySelector("community id").textContent;
           // const videoId = videoInfo.querySelector("video id").textContent;
           // const title = videoInfo.querySelector("video title").textContent;
           // const thumbnail = videoInfo.querySelector("community thumbnail").textContent;

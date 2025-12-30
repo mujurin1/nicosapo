@@ -12,7 +12,7 @@ export default class ExcludeList extends React.Component {
   }
 
   setParams() {
-    // chrome.runtime.sendMessage(
+    // old: chrome.runtime.sendMessage(
     //   {
     //     purpose: "getFromLocalStorage",
     //     key: "search.item.exclude"
@@ -44,7 +44,7 @@ export default class ExcludeList extends React.Component {
   }
 
   deleteItem(id) {
-    // chrome.runtime.sendMessage(
+    // old: chrome.runtime.sendMessage(
     //   {
     //     purpose: "getFromLocalStorage",
     //     key: "search.item.exclude"
@@ -55,7 +55,7 @@ export default class ExcludeList extends React.Component {
     Promise.resolve(response).then(
       response => {
         const removed = response.filter(item => item.id !== id);
-        // chrome.runtime.sendMessage(
+        // old: chrome.runtime.sendMessage(
         //   {
         //     purpose: "saveToLocalStorage",
         //     key: "search.item.exclude",

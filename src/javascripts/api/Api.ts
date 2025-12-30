@@ -39,7 +39,7 @@ export default class Api {
     status: "onair" | "released" | "ended",
     options?: { offset?: number; }
   ): Promise<ProgramInfo[]> {
-    // const url = "https://live.nicovideo.jp/front/api/pages/follow/v1/programs?status=onair&offset=0";
+    // old: const url = "https://live.nicovideo.jp/front/api/pages/follow/v1/programs?status=onair&offset=0";
 
     const url = new URL(`https://live.nicovideo.jp/front/api/pages/follow/v1/programs`);
     url.searchParams.append("status", status);
@@ -55,7 +55,7 @@ export default class Api {
 
 
   // getUser("comingsoon") に置き換え済み
-  // // jQuery オブジェクトでなく JSON を返したい
+  // old: // jQuery オブジェクトでなく JSON を返したい
   // static getUserFuture() {
   //   return new Promise((resolve, reject) => {
   //     const url = "https://live.nicovideo.jp/front/api/pages/follow/v1/programs?status=comingsoon&offset=0";
@@ -205,9 +205,9 @@ export default class Api {
   }
 
   static async fetchVideoStatistics(id: string, source = "statistics", title = ""): Promise<Statistics> {
-    // let url = '';
+    // old: let url = '';
 
-    // if (source === "statistics")
+    // old: if (source === "statistics")
     //   url = `https://live2.nicovideo.jp/watch/${id}/statistics`;
     // else if (source === "apiv2")
     //   url = `https://api.search.nicovideo.jp/api/v2/live/contents/search?q=${title}&targets=title&fields=contentId,title,viewCounter,commentCounter&filters[liveStatus][0]=onair&_sort=-viewCounter`;
