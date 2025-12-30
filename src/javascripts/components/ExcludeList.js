@@ -1,9 +1,6 @@
 import React from "react";
-import Time from "../common/Time";
-import BroadcastItem from "./BroadcastItem";
 import AutoEnterEmpty from "../components/AutoEnterEmpty";
-import Api from "../api/Api";
-import store from "store";
+import BroadcastItem from "./BroadcastItem";
 
 export default class ExcludeList extends React.Component {
   constructor(props) {
@@ -15,11 +12,14 @@ export default class ExcludeList extends React.Component {
   }
 
   setParams() {
-    chrome.runtime.sendMessage(
-      {
-        purpose: "getFromLocalStorage",
-        key: "search.item.exclude"
-      },
+    // chrome.runtime.sendMessage(
+    //   {
+    //     purpose: "getFromLocalStorage",
+    //     key: "search.item.exclude"
+    //   },
+    const communities = JSON.parse(localStorage.getItem("search.item.exclude") ?? "[]");
+    // MEMO: Promise なのは React の setState 内で非同期処理を扱うため
+    Promise.resolve(communities).then(
       communities => {
         const itemParams = [];
         communities.forEach(community => {
@@ -44,19 +44,24 @@ export default class ExcludeList extends React.Component {
   }
 
   deleteItem(id) {
-    chrome.runtime.sendMessage(
-      {
-        purpose: "getFromLocalStorage",
-        key: "search.item.exclude"
-      },
+    // chrome.runtime.sendMessage(
+    //   {
+    //     purpose: "getFromLocalStorage",
+    //     key: "search.item.exclude"
+    //   },
+
+    const response = JSON.parse(localStorage.getItem("search.item.exclude") ?? "[]");
+    // MEMO: Promise なのは React の setState 内で非同期処理を扱うため
+    Promise.resolve(response).then(
       response => {
         const removed = response.filter(item => item.id !== id);
-        chrome.runtime.sendMessage(
-          {
-            purpose: "saveToLocalStorage",
-            key: "search.item.exclude",
-            value: removed
-          });
+        // chrome.runtime.sendMessage(
+        //   {
+        //     purpose: "saveToLocalStorage",
+        //     key: "search.item.exclude",
+        //     value: removed
+        //   });
+        localStorage.setItem("search.item.exclude", JSON.stringify(removed));
         this.setParams();
       }
     );

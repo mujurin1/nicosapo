@@ -1,8 +1,8 @@
 import store from "store";
-import NiconamaTabs from "../modules/NiconamaTabs";
-import { CommunityBuilder, ProgramBuilder } from '../modules/ManageableBuilder';
-import bucket from "../modules/Bucket"
 import Api from '../api/Api';
+import bucket from "../modules/Bucket";
+import { CommunityBuilder, ProgramBuilder } from '../modules/ManageableBuilder';
+import NiconamaTabs from "../modules/NiconamaTabs";
 
 export const ON_VISIT = "ON_VISIT";
 export const ON_LEAVE = "ON_LEAVE";
