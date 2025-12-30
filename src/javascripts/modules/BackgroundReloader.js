@@ -2,21 +2,24 @@ import Api from "../api/Api";
 import Badge from "../modules/Badge";
 import bucket from "./Bucket";
 import { CommunityBuilder, ProgramBuilder } from './ManageableBuilder';
-import VideoInfoUtil from './VideoInfoUtil';
 
 export default class BackgroundReloader {
   static run() {
     Promise.resolve()
       .then(() => Api.loadCasts("user"))
       .then($videoInfoList => {
-        $videoInfoList = VideoInfoUtil.removeReservation($videoInfoList);
+        // $videoInfoList = VideoInfoUtil.removeReservation($videoInfoList);
         Badge.setText($videoInfoList.length);
         const builders = [];
         $videoInfoList.forEach(videoInfo => {
-          const communityId = videoInfo.querySelector("community id").textContent;
-          const videoId = videoInfo.querySelector("video id").textContent;
-          const title = videoInfo.querySelector("video title").textContent;
-          const thumbnail = videoInfo.querySelector("community thumbnail").textContent;
+          // const communityId = videoInfo.querySelector("community id").textContent;
+          // const videoId = videoInfo.querySelector("video id").textContent;
+          // const title = videoInfo.querySelector("video title").textContent;
+          // const thumbnail = videoInfo.querySelector("community thumbnail").textContent;
+          const communityId = videoInfo.id;     // 放送者ID (もとは community_id)
+          const videoId = `lv${videoInfo.id}`;
+          const title = videoInfo.title;
+          const thumbnail = videoInfo.thumbnail_url;
 
           const community = new CommunityBuilder()
             .id(communityId)
@@ -39,10 +42,6 @@ export default class BackgroundReloader {
         });
 
         bucket.mask(builders.map(v => v.co));
-      })
-      .catch(err => {
-        console.error(err);
-        throw err;
       });
   }
 }

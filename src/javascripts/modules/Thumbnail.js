@@ -2,7 +2,7 @@
 import Api from "../api/Api";
 
 const UPDATE_INTERVAL_MILLISEC = 1000;
-const LOADING_TEXT = "loading"
+const LOADING_TEXT = "loading";
 
 export default class Thumbnail {
   constructor() {
@@ -61,8 +61,8 @@ export default class Thumbnail {
         </div>
       </div>
     `,
-        'text/html'
-      )
+      'text/html'
+    )
       .childNodes[0].querySelector('body').childNodes[0];
 
     if (this._isReserved && this._isOfficial === false) {
@@ -93,7 +93,7 @@ export default class Thumbnail {
       s = `0${s}`;
 
     if (h > 0)
-      h = `${h}:`
+      h = `${h}:`;
     else
       h = '';
 
@@ -135,7 +135,7 @@ export default class Thumbnail {
             data.instance.update();
           }
         }, 1);
-      }
+      };
 
       const updater2 = () => {
         const timer = setInterval(() => {
@@ -147,7 +147,7 @@ export default class Thumbnail {
             clearInterval(timer);
           }
         }, 100);
-      }
+      };
 
       const updater3 = () => {
         this.setStatistics(tooltip, this._watchCount, this._commentCount, this.getElapsedTime());
@@ -157,7 +157,7 @@ export default class Thumbnail {
             clearInterval(timer); // for in
           }
         }, 1000);
-      }
+      };
 
       if (this._isBeforeRerender) {
         updater1();
@@ -171,7 +171,7 @@ export default class Thumbnail {
 
       this._isCreated = true;
 
-    }
+    };
 
     const options = {
       placement: "top",
@@ -226,18 +226,10 @@ export default class Thumbnail {
 
   fetchFromRSS() {
     Api.fetchVideoStatistics(this._id, "apiv2", this._title).then((res) => {
-      if (res.data.data.length === 0)
-        return;
-      if (this.isFetched()) {
-        return;
-      }
-      const {
-        viewCounter,
-        commentCounter
-      } = res.data.data[0];
+      if (this.isFetched()) return;
       this.setParams({
-        watchCount: viewCounter.toString(),
-        commentCount: commentCounter.toString()
+        watchCount: res.watchCount.toString(),
+        commentCount: res.commentCount.toString()
       });
     });
   }

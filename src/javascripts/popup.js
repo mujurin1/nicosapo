@@ -1,12 +1,12 @@
 import store from "store";
 import Api from "./api/Api";
-import UserThumbnails from "./modules/UserThumbnails";
 import OfficialThumbnails from "./modules/OfficialThumbnails";
 import Thumbnail from "./modules/Thumbnail";
+import UserThumbnails from "./modules/UserThumbnails";
 import Search from "./modules/search";
 import {
-  showSpinner,
-  hideSpinner
+  hideSpinner,
+  showSpinner
 } from "./modules/spinner";
 
 // DOM を削除・非表示
@@ -57,13 +57,9 @@ class Streams {
 
       // コメント数・来場者数読み込み
       Api.fetchVideoStatistics(thumbnail._id).then(res => {
-        const {
-          watchCount,
-          commentCount
-        } = res.data.data;
         thumbnail.setParams({
-          watchCount: watchCount.toString(),
-          commentCount: commentCount.toString()
+          watchCount: res.watchCount.toString(),
+          commentCount: res.commentCount.toString()
         });
       }).catch(() => {
         thumbnail._isRequireRSS = true;
@@ -212,7 +208,7 @@ class Tabs {
   const userTab = document.getElementById("user");
   userTab.addEventListener("click", () => {
     Tabs.change("user");
-});
+  });
 
   const officialTab = document.getElementById("official");
   officialTab.addEventListener("click", () => {
